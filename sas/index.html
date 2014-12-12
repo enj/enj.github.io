@@ -1,24 +1,756 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-  	<meta charset="utf-8">
-    <title>Your Awesome Webpage created on Thu, Dec 11 2014 9:50 PM</title>
-<script language="JavaScript" type="text/javascript">
-function breakout_of_frame()
-{
-  // see http://www.thesitewizard.com/archive/framebreak.shtml
-  // for an explanation of this script and how to use it on your
-  // own website
-  if (top.location != location) {
-    top.location.href = document.location.href ;
-  }
-}
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
 
-breakout_of_frame();
-</script>
+<!-- Bootstrap Latest compiled and minified CSS, breaks if locally referenced -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+<!-- Bootstrap Optional theme -->
+<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+
+<!-- Bootstrap Latest compiled and minified JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+
+<script src="js/bootstrap-datepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="css/bootstrap-clockpicker.min.css">
+<script type="text/javascript" src="js/bootstrap-clockpicker.min.js"></script>
+<link id="bsdp-css" href="css/datepicker3.css" rel="stylesheet">
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Timeline</title>
+	
+	  <script src="vis/dist/vis.min.js"></script>
+    <link href="vis/dist/vis.min.css" rel="stylesheet" type="text/css" />
+    
+    
+	
+	  <style>
+
+    #timeline-main {
+      width: 100%;
+      margin: 0 auto;
+    }
+    .timeline-container {
+      margin: 10px;
+    }
+    
+    
+    testOpacity {
+      opacity: 0.3;
+    }
+    
+        /* custom styles for individual items, load this after vis.css */
+        
+        
+    .vis.timeline .item.projectOne {
+      background-color: #F5DA81;
+      border-color: #FFBF00;
+    }
+
+    .vis.timeline .item.projectTwo {
+      background-color: #81F781;
+      border-color: #00FF00;
+    }
+    
+    
+    /*.vis.timeline .item.projectTwo.selected {
+      /* custom colors for selected orange items /
+      background-color: orange;
+      border-color: orangered;
+    }*/
+
+    .vis.timeline .item.projectThree {
+      background-color: #BE81F7;
+      border-color: #8000FF;
+      
+    }
+
+/*
+    .vis.timeline .item.projectOne {
+      background-color: greenyellow;
+      border-color: green;
+    }
+
+    .vis.timeline .item.projectTwo {
+      background-color: gold;
+      border-color: orange;
+    }
+    .vis.timeline .item.projectTwo.selected {
+      /* custom colors for selected orange items /
+      background-color: orange;
+      border-color: orangered;
+    }
+
+    .vis.timeline .item.projectThree {
+      background-color: magenta;
+      border-color: purple;
+      color: white;
+    }
+*/
+    /* our custom classes overrule the styles for selected events,
+       so lets define a new style for the selected events */
+    .vis.timeline .item.selected {
+      background-color: white;
+      border-color: black;
+      color: black;
+      box-shadow: 0 0 10px gray;
+    }
+
+    
+  </style> 
+    
+  
+  <script language="JavaScript" type="text/javascript">
+    function breakout_of_frame()
+    {
+    // see http://www.thesitewizard.com/archive/framebreak.shtml
+    // for an explanation of this script and how to use it on your
+    // own website
+      if (top.location != location) {
+        top.location.href = document.location.href ;
+      }
+    }
+
+  breakout_of_frame();
+  </script>
+    
   </head>
+
   <body>
-    <p>Make something amazing with the web</p>
+
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#"><img src="http://upload.wikimedia.org/wikipedia/commons/1/10/SAS_logo_horiz.svg" width="68" height="28"></img></a>
+  
+      </div>
+  
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Project <span class="sr-only">(current)</span></a></li>
+          <li><a href="#">Messages</a></li>
+          <li><a href="#">Diagnostics</a></li>
+          <li><a href="#">Budget</a></li>
+          <li><a href="#">People</a></li>
+        </ul>
+  
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#">Jane Doe</a></li>
+          <li><a href="#"><i class="glyphicon glyphicon-user"></i></a></li>
+          <li><a href="#"><i class="glyphicon glyphicon-envelope"></i></a></li>
+          <li><a href="#"><i class="glyphicon glyphicon-calendar"></i></a></li>
+          <li><a href="#"><i class="glyphicon glyphicon-cog"></i></a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+ 
+      <div class="container-fluid">
+        <div class="row text-center" >
+          <div class="col-md-4">
+            <button type="button" class="btn btn-default" id="softResetClick">
+                <i class="glyphicon glyphicon-refresh"></i>
+                Reset
+            </button>
+          </div>
+          <div class="col-md-4">
+            <button type="button" class="btn btn-default" id="timeline-moveLeft">
+                <i class="glyphicon glyphicon-chevron-left"></i>
+              </button>
+              <button type="button" class="btn btn-default" id="timeline-zoomOut">
+                <i class="glyphicon glyphicon-minus"></i>
+              </button>
+              <button type="button" class="btn btn-default" id="timeline-zoomIn">
+                <i class="glyphicon glyphicon-plus"></i>
+              </button>
+              <button type="button" class="btn btn-default" id="timeline-moveRight">
+                <i class="glyphicon glyphicon-chevron-right"></i>
+              </button>
+          </div>
+          <div class="col-md-4">
+            <button type="button" class="btn btn-default" id="timeline-addTask" data-toggle="modal" data-target="#myModal">
+                <i class="glyphicon glyphicon-tasks"></i>
+                Add Task
+            </button>
+          </div>
+        </div>
+      </div>
+            
+      <div class="container">
+        <!-- TIMELINE DIV GOES HERE -->
+        <div id="timeline-main"></div>
+      </div>
+      
+      <div class="container-fluid">
+        <div class="row text-center" >
+          <div class="col-md-5"></div>
+          <div class="col-md-2">
+             <div id="timeline-goTo" class="form-group">
+               <div class="input-group">
+                <input type="text"class="form-control" placeholder="Go To Date" id="timeline-moveToData">
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-default" id="timeline-moveTo">Go</button>
+                </span>
+                </div>
+              </div>
+                
+          </div>
+          <div class="col-md-5">
+            <button type="button" class="btn btn-default" id="showAllProjectClick">
+                <i class="glyphicon glyphicon-eye-open"></i>
+                Show All
+            </button>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="projectOneClick projectWell col-md-4">
+          <h2>Elections coverage API</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p>
+            <div class="progress">
+              <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+                <span class="sr-only">45% Complete</span>
+              </div>
+            </div>
+          </p>
+        </div>
+        <div class="projectTwoClick projectWell col-md-4">
+          <h2>Christmas Day Ad</h2>
+          <p>Lorem ipsum dolor sit amet, erant delectus deseruisse nam cu, error ignota oblique te nam, qui no solet fabulas perfecto. Id eam eros deterruisset, his te oportere sententiae. Ad cum tale viderer inimicus, his ad enim assum. Vocent omittam pri cu.</p>
+          <p>
+            <div class="progress">
+              <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 85%">
+                <span class="sr-only">85% Complete</span>
+              </div>
+            </div>
+          </p>
+       </div>
+        <div class="projectThreeClick projectWell col-md-4">
+          <h2>Quarterly 15% off deal</h2>
+          <p>Eos nulla dignissim te, solum impetus tamquam eu vix, ex quaeque detracto eos. Pri no eius meliore sapientem. Ius id altera oblique delicata. Cu vulputate abhorreant voluptatibus sit, eu dolorum debitis eam. Eirmod neglegentur cu usu, duo mnesarchum moderatius ei. </p>
+          <p>
+            <div class="progress">
+              <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" style="width: 15%">
+                <span class="sr-only">15% Complete</span>
+              </div>
+            </div>
+          </p>
+        </div>
+      </div>
+      
+      
+      <!--
+      ********************************************
+      Start of Modal
+      ********************************************      
+      -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="myModalLabel">Add A Task</h4>
+            </div>
+            <div class="modal-body">
+    
+              <!--FORM PAGE -->
+              <form class="form-horizontal" role="form">
+                
+                <div class="form-group">
+                  <label for="form-project" class="col-sm-2 control-label">Project</label>
+                  <div class="col-sm-10">
+                    <select id="form-project" class="form-control">
+                      <option value="projectOne">Elections coverage API</option>
+                      <option value="projectTwo">Christmas Day AD</option>
+                      <option value="projectThree">Quarterly 15% off deal</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="form-task" class="col-sm-2 control-label">Task</label>
+                  <div class="col-sm-10">
+                    <input type="task" class="form-control" id="form-task" placeholder="">
+                  </div>
+               <!--   
+                  <div class="col-sm-3">
+                    <select class="form-control">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                  </select>
+                  </div>
+                  -->
+                </div>
+                
+                
+                <div class="form-group">
+          
+                  <label for="form-fromDate" class="col-sm-2 control-label">Date</label>
+                  <div class="col-sm-4">
+                    <div id="form-fromDate2">
+                      <div class="input-group date">
+                        <input id="form-fromDate" type="text" class="form-control">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                      </div>
+                    </div>
+                  </div>
+                   <label for="form-fromTime" class="col-sm-2 control-label">Time</label>
+                  <div class="col-sm-4">
+                    <div class="input-group clockpicker" data-autoclose="true">
+                      <input type="text" class="form-control" id="form-fromTime" placeholder="">
+                      <span class="input-group-addon">
+                         <span class="glyphicon glyphicon-time"></span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+    
+                
+                <div class="form-group">
+                  <div class="col-sm-offset-1 col-sm-1">
+                    <button id="AddDateTime" type="button" class="btn btn-default">To</button>
+                  </div>
+                  <div class="col-sm-4">
+                   <div id="form-fromDate2">
+                      <div class="input-group date">
+                        <input type="input" class="form-control" id="form-toDate" placeholder="" disabled>
+                        <span class="input-group-addon"><i id="clanderIcon" class="glyphicon glyphicon-th" disable></i></span>
+                      </div>
+                    </div>
+                  </div>
+                   <label for="form-toTime" class="col-sm-2 control-label"></label>
+                  <div class="col-sm-4">
+                    <div class="input-group clockpicker" data-autoclose="true">
+                      <input type="text" class="form-control" id="form-toTime" placeholder="" disabled>
+                      <span class="input-group-addon">
+                         <span id="clockIcon" class="glyphicon glyphicon-time" disable></span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+              </form>
+              <!--  END FORM -->
+            </div>
+            <div class="modal-footer">
+              <button id="Close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button id="AddTask" type="button" class="btn btn-primary" data-dismiss="modal">Add Task</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--
+      ********************************************
+      END OF MODAL
+      ********************************************      
+      -->
+      
+      
+      
+<!--
+      <hr>-->
+
+      <footer>
+        <p>&copy; SAS 2014</p>
+      </footer>
+    </div>
+    
+    
+    <script>
+    /*************************************************************************
+     * 
+     * 
+     *************************************************************************/
+    
+      // create a dataset with items
+      // we specify the type of the fields `start` and `end` here to be strings
+      // containing an ISO date. The fields will be outputted as ISO dates
+      // automatically getting data from the DataSet via items.get().
+      var items = new vis.DataSet({
+        type: { start: 'ISODate', end: 'ISODate' }
+      });
+    
+      // add items to the DataSet
+      items.add([
+        {id: 1, content: 'Project Review', start: '2015-01-10', type: 'point', className: 'projectOne'},
+        {id: 26, content: 'Project Ends', start: '2014-12-25', type: 'point', className: 'projectTwo'},
+        {id: 2, content: 'Submission of Ad', start: '2014-12-18', className: 'projectThree'},
+        {id: 3, content: 'Ad Early Run', start: '2014-12-21T01:01:00Z', className: 'projectOne'},
+        {id: 4, content: 'Website Development', start: '2014-11-26T09:00:00Z', end: '2014-12-04T00:00:00Z', className: 'projectTwo'},
+        {id: 5, content: 'Contact Shella for URL setup', start: '2014-11-24', type:'point', className: 'projectThree'},
+        {id: 6, content: 'Grant Mike access to site', start: '2014-12-11', className: 'projectOne'},
+        {id: 7, content: 'Start Project', start: '2014-10-11', className: 'projectTwo'},
+        {id: 8, content: 'Pleminary Meeting', start: '2014-10-13T12:00:00Z', end: '2014-10-13T15:00:00Z', className: 'projectThree'}, /* Needs to be span of a few hours 12 - 3*/
+        {id: 9, content: 'Market Research Deliverable', start: '2014-10-15', type: 'point', className: 'projectOne'},
+        {id: 10, content: 'Budget Meeting', start: '2014-10-17T09:00:00Z' , end: '2014-10-17T12:00:00Z', className: 'projectTwo'},   /* Needs to be span of a few hours 12 - 3*/
+        {id: 11, content: 'Mark on Vacation', start: '2014-10-26', end: '2014-11-01', className: 'projectThree'}, 
+        {id: 12, content: 'Deliver Story Board', start: '2014-10-29', type: 'point', className: 'projectOne'},
+        {id: 13, content: 'Story Board Review', start: '2014-11-04', className: 'projectTwo'},
+        {id: 14, content: 'Focus Group Meeting', start: '2014-11-11', className: 'projectThree'},
+        {id: 15, content: 'Schedule Focus Group', start: '2014-11-06', className: 'projectOne'},
+        {id: 16, content: 'Website Design', start: '2014-11-17', end: '2014-11-22', className: 'projectTwo'},
+        /*{id: 17, content: 'Promote Haley', start: '2014-11-21'},
+        {id: 18, content: 'Promote Haley', start: '2014-11-23'},
+        {id: 19, content: 'Promote Haley', start: '2014-11-28'},
+        {id: 20, content: 'Promote Haley', start: '2014-11-29'},
+        {id: 21, content: 'Promote Haley', start: '2014-12-01'},
+        {id: 22, content: 'Promote Haley', start: '2014-12-05'},
+        {id: 23, content: 'Promote Haley', start: '2014-12-07'},
+        {id: 24, content: 'Promote Haley', start: '2014-12-09'},
+        {id: 25, content: 'Promote Haley', start: '2014-12-11'},*/
+      ]);
+    
+      function createTimeline(main) {
+        var main = document.getElementById('timeline-main');
+        var container = document.createElement('div');
+        container.className = 'timeline-container';
+        main.appendChild(container);
+    
+        var options = {
+          editable: true,
+          clickToUse: true,
+          zoomMin: 1000 * 60 * 60 * 24,             // one day in milliseconds
+          zoomMax: 1000 * 60 * 60 * 24 * 31 * 4,     // about four months in milliseconds
+          
+          
+
+    onAdd: function (item, callback) {
+      item.content = prompt('Enter text content for new item:', item.content);
+      if (item.content != null) {
+        callback(item); // send back adjusted new item
+      }
+      else {
+        callback(null); // cancel item creation
+      }
+    },
+
+    onMove: function (item, callback) {
+      if (confirm('Do you really want to move the item to\n' +
+          'start: ' + item.start + '\n' +
+          'end: ' + item.end + '?')) {
+        callback(item); // send back item as confirmation (can be changed)
+      }
+      else {
+        callback(null); // cancel editing item
+      }
+    },
+/*
+    onMoving: function (item, callback) {
+      if (item.start < min) item.start = min;
+      if (item.start > max) item.start = max;
+
+      callback(item); // send back the (possibly) changed item
+    },*/
+
+    onUpdate: function (item, callback) {
+      item.content = prompt('Edit items text:', item.content);
+      if (item.content != null) {
+        callback(item); // send back adjusted item
+      }
+      else {
+        callback(null); // cancel updating the item
+      }
+    },
+
+    onRemove: function (item, callback) {
+      if (confirm('Remove item ' + item.content + '?')) {
+        callback(item); // confirm deletion
+      }
+      else {
+        callback(null); // cancel deletion
+      }
+    }
+        };
+    
+        return new vis.Timeline(container, items, options);
+      }
+    
+      var timeline = createTimeline();
+  
+  
+      /**
+     * Move the timeline a given percentage to left or right
+     * @param {Number} percentage   For example 0.1 (left) or -0.1 (right)
+     */
+    function move (percentage) {
+        var range = timeline.getWindow();
+        var interval = range.end - range.start;
+
+        timeline.setWindow({
+            start: range.start.valueOf() - interval * percentage,
+            end:   range.end.valueOf()   - interval * percentage
+        });
+    }
+
+    /**
+     * Zoom the timeline a given percentage in or out
+     * @param {Number} percentage   For example 0.1 (zoom out) or -0.1 (zoom in)
+     */
+    function zoom (percentage) {
+        var range = timeline.getWindow();
+        var interval = range.end - range.start;
+
+        timeline.setWindow({
+            start: range.start.valueOf() - interval * percentage,
+            end:   range.end.valueOf()   + interval * percentage
+        });
+    }
+
+    // attach events to the navigation buttons
+    document.getElementById('timeline-zoomIn').onclick    = function () { zoom(-0.2); };
+    document.getElementById('timeline-zoomOut').onclick   = function () { zoom( 0.5); };
+    document.getElementById('timeline-moveLeft').onclick  = function () { move( 0.4); };
+    document.getElementById('timeline-moveRight').onclick = function () { move(-0.4); };
+    
+    document.getElementById('timeline-moveTo').onclick = function() {
+      
+      var v = document.getElementById('timeline-moveToData').value;
+      v = v ? v : new Date();
+      var v1 = new Date(v);
+      var v2 = new Date(v);
+           
+      timeline.setWindow(
+        v1.offsetDays(-14),
+        v2.offsetDays(+14)
+      );
+      
+      document.getElementById('timeline-moveToData').value ="";
+      
+    };
+
+
+
+
+
+
+    /*************************************************************************
+     * jQuery and jQueryUI section 
+     * 
+     * http://jqueryui.com/dialog/#modal-form
+     * http://getbootstrap.com/javascript/#modals
+     * 
+     *************************************************************************/
+     $( document ).ready(function() {
+       
+        $('#timeline-goTo input').datepicker({
+            format: "yyyy-mm-dd",
+            startDate: "2014-01-01",
+            endDate: "2030-01-01",
+            todayBtn: "linked",
+            daysOfWeekDisabled: "0,6",
+            autoclose: true,
+            todayHighlight: true
+        });
+
+        $( "#brand" ).click(function() {
+          alert();
+        });
+        
+        $('.clockpicker').clockpicker();
+      
+
+        $('#form-fromDate2 .input-group.date').datepicker({
+            format: "yyyy-mm-dd",
+            startDate: "2014-01-01",
+            endDate: "2030-01-01",
+            todayBtn: "linked",
+            daysOfWeekDisabled: "0,6",
+            autoclose: true,
+            todayHighlight: true
+        });
+        
+        $('#form-toDate .input-group.date').datepicker({
+            format: "yyyy-mm-dd",
+            startDate: "2014-01-01",
+            endDate: "2030-01-01",
+            todayBtn: "linked",
+            daysOfWeekDisabled: "0,6",
+            autoclose: true,
+            todayHighlight: true
+        });
+        
+        $( "#brand" ).click(function() {
+          alert();
+        });
+        
+        var elemetnDisabled = true;
+        
+        function makeDisabled(){
+          $("#form-toDate").val("");
+    			$("#form-toTime").val("");
+            
+    			$("#form-toDate").prop('disabled', true);
+    			$("#form-toTime").prop('disabled', true);
+    			//$("#clockIcon").prop('disabled', true);
+    			//$("#clanderIcon").prop('disabled', true);
+    			elemetnDisabled = true;
+  	   	}  
+  		
+  		  function makeEnabled(){
+  			  $("#form-toDate").prop('disabled', false);
+  			  $("#form-toTime").prop('disabled', false);
+  			  //$("#clockIcon").prop('disabled', false);
+  			  //$("#clanderIcon").prop('disabled', true);
+    			elemetnDisabled = false;
+    		}
+    		
+    		function ResetForm(){
+    		  makeDisabled();
+    		  $("#form-task").val("");
+    		  $("#form-fromDate").val("");
+    		  $("#form-fromTime").val("");
+    		  $("#form-toDate").val("");
+    		  $("#form-toTime").val("");
+    		}
+    		
+    		var count = 100;
+    		
+    		function SaveForm(){
+    		  var project = $("#form-project").val();
+    		  var task = $("#form-task").val();
+    		  var startDate = $("#form-fromDate").val();
+    		  var startTime = $("#form-fromTime").val();
+    		  var endDate = $("#form-toDate").val();
+    		  var endTime = $("#form-toTime").val();
+    		  
+    		  //used to see what actions is taken with adding an element
+    		  var boolStartDate = !(startDate === "");
+    		  var boolStartTime = !(startTime === "");
+    		  var boolEndDate = !(endDate === "");
+    		  var boolEndTime = !(endTime === "");
+    		  
+    		  if((boolStartDate) & !(boolStartTime) & !(boolEndDate) & !(boolEndTime)){
+    		    items.add([{id: count, content: task, start: startDate, className: project},]);
+    		  } else if((boolStartDate) & (boolStartTime) & !(boolEndDate) & !(boolEndTime)){
+    		    items.add([{id: count, content: task, start: startDate + "T" + startTime +":00Z", type: 'point', className: project},]);
+    		  } else if((boolStartDate) & (boolStartTime) & (boolEndDate) & !(boolEndTime)){
+    		    items.add([{id: count, content: task, start: startDate + "T" + startTime +":00Z", end: endDate, className: project},]);
+    		  } else if((boolStartDate) & (boolStartTime) & (boolEndDate) & (boolEndTime)){
+    		    items.add([{id: count, content: task, start: startDate + "T" + startTime +":00Z", end: endDate + "T" + endTime +":00Z", className: project},]);
+    		  }else if((boolStartDate) & !(boolStartTime) & (boolEndDate) & !(boolEndTime)){
+    		   items.add([{id: count, content: task, start: startDate, end: endDate, className: project},]);
+    		  } else if((boolStartDate) & !(boolStartTime) & (boolEndDate) & (boolEndTime)){
+    		    items.add([{id: count, content: task, start: startDate, end: endDate + "T" + endTime +":00Z", className: project},]);
+    		  } else {
+    		    //ERROR need to return false here and stop the function
+    		  }
+    		  
+    		  count++
+    		  
+    		  var d1 = new Date(startDate);
+          
+    		  var d2 = new Date(startDate);
+           
+          timeline.setWindow(
+            d1.offsetDays(-14),
+            d2.offsetDays(+14)
+          );
+          		
+      		// now zooming to hold a months worth   
+    		  // timeline.fit();
+    		}
+  		
+  		$("#AddDateTime").click(function(){
+  		  if(elemetnDisabled){
+  		    makeEnabled();
+  		  } else {
+  		    makeDisabled();
+  		  }
+  		});
+  		    
+  		$("#AddTask").click(function(){
+  		    SaveForm();
+  		    ResetForm();
+  		});
+  		
+  		$("#Close").click(function(){
+  		    ResetForm();
+  		});
+  		
+  		
+      $('.projectWell').click(function() {
+        $('.projectWell').removeClass('well');
+        $( this ).addClass('well');
+      });
+  		
+  		
+      $('.projectOneClick').click(function() {
+        $('.vis.timeline .item').hide();
+        $('.projectOne').show();
+      });
+  		
+  		
+      $('.projectTwoClick').click(function() {
+        $('.vis.timeline .item').hide();
+        $('.projectTwo').show();
+      });
+  		
+  		
+      $('.projectThreeClick').click(function() {
+        $('.vis.timeline .item').hide();
+        $('.projectThree').show();
+      });
+  		
+  		function showAllProjectsF() {
+        $('.vis.timeline .item').show();
+        $('.projectWell').removeClass('well');
+      }
+  		
+      $('#showAllProjectClick').click(showAllProjectsF);
+  	
+    Date.prototype.offsetDays = function(days) {
+      this.setDate(this.getDate() + days);
+      return this;
+    };
+    
+    function softResetTL() {
+      
+    showAllProjectsF();
+    
+    var today1 = new Date();
+    var today2 = new Date();
+    
+    timeline.setWindow(
+      today1.offsetDays(-14),
+      today2.offsetDays(+14)
+    );
+
+    }
+    
+    softResetTL();
+    
+    $('#softResetClick').click(softResetTL);
+    
+     });
+     
+    </script>
+    
   </body>
 </html>
-

@@ -1,0 +1,13 @@
+<div id="particles-js">
+  <div class="header">
+      <h1>
+        <span class="site-title">{{site.username}}</span>
+        <span class="site-description">{{site.user_title}}</span>
+      </h1>
+      <div class="header-icons">
+        <a aria-label="Send email" href="{{ site.email | prepend: "mailto:" }}"><i class="icon fa fa-envelope"></i></a>
+        <a aria-label="My Github" href="{{ site.github_username | prepend: "https://github.com/" }}"><i class="icon fa fa-github-alt" aria-hidden="true"></i></a>
+        <a aria-label="My Stack Overflow CV" href="{{ site.stack_overflow_cv | prepend: "https://stackoverflow.com/cv/" }}"><i class="icon fa fa-stack-overflow" aria-hidden="true"></i></a>
+      </div>
+  </div>
+</div>

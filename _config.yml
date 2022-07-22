@@ -1,11 +1,11 @@
 # Site settings
 title: "Mo Khan"
-description: "Staff Software Engineer, VMware"
+description: "Software Engineer"
 url: "https://monis.app"
 
 # User settings
 username: "Mo Khan"
-user_title: "Staff Software Engineer, VMware"
+user_title: "Software Engineer"
 email: "i@monis.app"
 github_username: "enj"
 stack_overflow_cv: "m"

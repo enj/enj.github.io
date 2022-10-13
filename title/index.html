@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+
+<body onload="setTitle()">
+    <script>
+        function setTitle() {
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
+            document.title = params.title
+        }
+    </script>
+</body>
+
+</html>
